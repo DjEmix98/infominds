@@ -23,8 +23,8 @@ export function TableList<T>({ header, body, isLoading }: Props<T>) {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-            {header.map(({ label }) => (
-                <StyledTableHeadCell>{label}</StyledTableHeadCell>
+            {header.map(({ label, key }) => (
+                <StyledTableHeadCell key={key as string}>{label}</StyledTableHeadCell>
               ))}
               </TableRow>
           </TableHead>
@@ -35,7 +35,7 @@ export function TableList<T>({ header, body, isLoading }: Props<T>) {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 {header.map(({ key }) => (
-                  <TableCell>{row[key]}</TableCell>
+                  <TableCell key={key as string}>{row[key]}</TableCell>
                 ))}
               </TableRow>
             ))}

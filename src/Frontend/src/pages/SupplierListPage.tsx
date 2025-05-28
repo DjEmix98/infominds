@@ -1,15 +1,9 @@
-import { Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Stack, TextField, Typography } from "@mui/material";
 import { TableList } from "../components/TableList";
-import { BodyTable, Header } from "../types/tableList.types";
-
-type SupplierListQuery = {
-  id: number;
-  name: string;
-  address: string;
-  email: string;
-  phone: string;
-}
+import { Header } from "../types/tableList.types";
+import { SupplierListQuery } from "../types/supplier.types";
+import { useSuppliersList } from "../hooks/useSuppliersList";
+import { useRef } from "react";
 
 const headers: Header<SupplierListQuery>[] = [
   {
@@ -29,28 +23,33 @@ const headers: Header<SupplierListQuery>[] = [
     key: "phone",
   },
 ];
-//TODO: CREARE CUSTOM HOOK E INIZIARE LA PARTE RELATIVA A Employee
-export default function SupplierListPage() {
-  const [list, setList] = useState<BodyTable<SupplierListQuery>[]>([]);
 
-  useEffect(() => {
-    fetch("/api/suppliers/list")
-      .then((response) => {
-        return response.json();
-      })
-      .then((datas: SupplierListQuery[]) => {
-        const records = datas.map((data: SupplierListQuery) => ({
-          ...data,
-          id: `${data.id}`
-        }))
-        setList(records);
-      });
-  }, []);
+export default function SupplierListPage() {
+  const [list, setFilters] = useSuppliersList();
+  const timeoutId = useRef<number>(null);
+
   return (
     <>
       <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
         Suppliers
       </Typography>
+      <Stack mb={4}>
+        <TextField
+          id="outlined-basic"
+          label="Name"
+          placeholder="type to search by name..."
+          variant="outlined"
+          onChange={(event) => {
+            if (timeoutId.current) {
+              clearTimeout(timeoutId.current);
+            }
+            timeoutId.current = setTimeout(
+              () => setFilters(event.target.value),
+              500
+            );
+          }}
+        />
+      </Stack>
       <TableList header={headers} body={list} isLoading={false} />
     </>
   );
