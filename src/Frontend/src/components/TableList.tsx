@@ -9,11 +9,11 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { BodyRecord, Header } from "../types/tableList.types";
+import { BodyTable, Header } from "../types/tableList.types";
 
 type Props<T> = {
   header: Header<T>[];
-  body: BodyRecord<T>[];
+  body: BodyTable<T>[];
   isLoading: boolean;
 };
 export function TableList<T>({ header, body, isLoading }: Props<T>) {

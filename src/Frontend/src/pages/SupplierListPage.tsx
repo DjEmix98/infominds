@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { TableList } from "../components/TableList";
-import { BodyRecord, Header } from "../types/tableList.types";
+import { BodyTable, Header } from "../types/tableList.types";
 
 type SupplierListQuery = {
   id: number;
@@ -31,15 +31,19 @@ const headers: Header<SupplierListQuery>[] = [
 ];
 //TODO: CREARE CUSTOM HOOK E INIZIARE LA PARTE RELATIVA A Employee
 export default function SupplierListPage() {
-  const [list, setList] = useState<BodyRecord<SupplierListQuery>[]>([]);
+  const [list, setList] = useState<BodyTable<SupplierListQuery>[]>([]);
 
   useEffect(() => {
     fetch("/api/suppliers/list")
       .then((response) => {
         return response.json();
       })
-      .then((datas: BodyRecord<SupplierListQuery>[]) => {
-        setList(datas);
+      .then((datas: SupplierListQuery[]) => {
+        const records = datas.map((data: SupplierListQuery) => ({
+          ...data,
+          id: `${data.id}`
+        }))
+        setList(records);
       });
   }, []);
   return (
