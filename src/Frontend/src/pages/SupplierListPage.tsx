@@ -1,18 +1,9 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  styled,
-  tableCellClasses,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { TableList } from "../components/TableList";
+import { BodyRecord, Header } from "../types/tableList.types";
 
-interface SupplierListQuery {
+type SupplierListQuery = {
   id: number;
   name: string;
   address: string;
@@ -20,57 +11,43 @@ interface SupplierListQuery {
   phone: string;
 }
 
+const headers: Header<SupplierListQuery>[] = [
+  {
+    label: "Name",
+    key: "name",
+  },
+  {
+    label: "Address",
+    key: "address",
+  },
+  {
+    label: "Email",
+    key: "email",
+  },
+  {
+    label: "Phone",
+    key: "phone",
+  },
+];
+//TODO: CREARE CUSTOM HOOK E INIZIARE LA PARTE RELATIVA A Employee
 export default function SupplierListPage() {
-  const [list, setList] = useState<SupplierListQuery[]>([]);
+  const [list, setList] = useState<BodyRecord<SupplierListQuery>[]>([]);
 
   useEffect(() => {
     fetch("/api/suppliers/list")
       .then((response) => {
         return response.json();
       })
-      .then((data) => {
-        setList(data as SupplierListQuery[]);
+      .then((datas: BodyRecord<SupplierListQuery>[]) => {
+        setList(datas);
       });
   }, []);
-
   return (
     <>
       <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
         Suppliers
       </Typography>
-
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <StyledTableHeadCell>Name</StyledTableHeadCell>
-              <StyledTableHeadCell>Address</StyledTableHeadCell>
-              <StyledTableHeadCell>Email</StyledTableHeadCell>
-              <StyledTableHeadCell>Phone</StyledTableHeadCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {list.map((row) => (
-              <TableRow
-                key={row.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.address}</TableCell>
-                <TableCell>{row.email}</TableCell>
-                <TableCell>{row.phone}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <TableList header={headers} body={list} isLoading={false} />
     </>
   );
 }
-
-const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-}));
