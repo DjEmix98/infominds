@@ -25,7 +25,7 @@ const headers: Header<SupplierListQuery>[] = [
 ];
 
 export default function SupplierListPage() {
-  const [list, setFilters] = useSuppliersList();
+  const [list, isLoading,setFilters] = useSuppliersList();
   const timeoutId = useRef<number>(null);
 
   return (
@@ -50,7 +50,7 @@ export default function SupplierListPage() {
           }}
         />
       </Stack>
-      <TableList header={headers} body={list} isLoading={false} />
+      <TableList header={headers} body={list} isLoading={isLoading} />
     </>
   );
 }

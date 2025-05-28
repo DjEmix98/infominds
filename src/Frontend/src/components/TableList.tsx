@@ -1,5 +1,7 @@
 import {
+  CircularProgress,
   Paper,
+  Stack,
   styled,
   Table,
   TableBody,
@@ -42,7 +44,9 @@ export function TableList<T>({ header, body, isLoading }: Props<T>) {
           </TableBody>
         </Table>
       ) : (
-        <p>Loading...</p>
+        <Stack justifyContent="center" alignItems="center" p={4}>
+          <CircularProgress />
+        </Stack>
       )}
     </TableContainer>
   );
