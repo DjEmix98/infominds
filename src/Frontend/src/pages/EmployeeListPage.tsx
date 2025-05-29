@@ -1,9 +1,10 @@
-import { Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { TableList } from "../components/TableList";
 import { Header } from "../types/tableList.types";
 import { EmployeeTable } from "../types/employee.types";
 import { useEmployeeList } from "../hooks/useEmployeeList";
 import { Filters } from "../components/employee-list/Filters";
+import { exportXml } from "../utils/xml.utils";
 
 const headers: Header<EmployeeTable>[] = [
   {
@@ -44,7 +45,7 @@ export default function EmployeeListPage() {
       <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
         Suppliers
       </Typography>
-    <Filters onSearch={setFilters}/>
+      <Filters onSearch={setFilters} />
       <TableList
         header={headers}
         body={employees.records}
@@ -66,6 +67,17 @@ export default function EmployeeListPage() {
           },
         }}
       />
+      {!isLoading && (
+        <Stack display="flex" flexDirection="row" justifyContent="flex-end">
+          <Button
+            onClick={() =>
+              exportXml(headers, employees.records, "Employees List")
+            }
+          >
+            Export as xml
+          </Button>
+        </Stack>
+      )}
     </>
   );
 }

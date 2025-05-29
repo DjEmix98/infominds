@@ -1,9 +1,10 @@
-import { Stack, TextField, Typography } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { TableList } from "../components/TableList";
 import { Header } from "../types/tableList.types";
 import { SupplierListQuery } from "../types/supplier.types";
 import { useSuppliersList } from "../hooks/useSuppliersList";
 import { useRef } from "react";
+import { exportXml } from "../utils/xml.utils";
 
 const headers: Header<SupplierListQuery>[] = [
   {
@@ -25,7 +26,7 @@ const headers: Header<SupplierListQuery>[] = [
 ];
 
 export default function SupplierListPage() {
-  const [list, isLoading,setFilters] = useSuppliersList();
+  const [list, isLoading, setFilters] = useSuppliersList();
   const timeoutId = useRef<number>(null);
 
   return (
@@ -51,6 +52,13 @@ export default function SupplierListPage() {
         />
       </Stack>
       <TableList header={headers} body={list} isLoading={isLoading} />
+      {!isLoading && (
+        <Stack display="flex" flexDirection="row" justifyContent="flex-end">
+          <Button onClick={() => exportXml(headers, list, "Supplier list")}>
+            Export as xml
+          </Button>
+        </Stack>
+      )}
     </>
   );
 }
